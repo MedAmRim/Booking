@@ -7,6 +7,9 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -20,7 +23,8 @@ public class Adresse {
 	private String region;
 	private String ville;
 	private String cartier;
-	@OneToOne()
+	@OneToOne
+	@JsonProperty(access = Access.WRITE_ONLY)
 	@JoinColumn(name = "id_hotel")
 	private Hotel hotel;
 	public Adresse(String region, String ville, String cartier, Hotel hotel) {

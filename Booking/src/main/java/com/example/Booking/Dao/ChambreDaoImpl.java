@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.Booking.Entities.Chambre;
+import com.example.Booking.Entities.Hotel;
 import com.example.Booking.Repository.ChambreRepository;
 
 @Service
@@ -15,6 +16,8 @@ import com.example.Booking.Repository.ChambreRepository;
 public class ChambreDaoImpl implements  IchambreDao{
 	@Autowired
 	private ChambreRepository chambreRepository;
+	@Autowired
+	private IhotelDao ihotelDao; 
 	@Override
 	public Chambre ajouterChambre(Chambre c) {
 		
@@ -40,5 +43,11 @@ public class ChambreDaoImpl implements  IchambreDao{
 		chambreRepository.deleteById(id);
 		
 	}
-
+	@Override
+	public List<Chambre> getChamberbyHotel(Long id) {
+		Hotel h = ihotelDao.chercherHotel(id);
+		return h.getChambres();
+		
+	}
+	
 }

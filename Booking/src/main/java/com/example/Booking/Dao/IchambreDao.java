@@ -12,6 +12,5 @@ public interface IchambreDao {
 	public List<Chambre> listchambres();
 	public Chambre charcherChambre(Long id);
 	
-	
-
+	public List<Chambre> getChamberbyHotel(Long id);
 }

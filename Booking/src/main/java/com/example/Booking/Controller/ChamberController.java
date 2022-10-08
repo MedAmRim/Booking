@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,6 +20,7 @@ import com.example.Booking.Dao.IchambreDao;
 import com.example.Booking.Entities.Chambre;
 @RestController
 @RequestMapping("/chambers")
+@CrossOrigin("*")
 public class ChamberController {
 	
 	@Autowired
@@ -54,4 +56,10 @@ public class ChamberController {
 		Chambre ch = ichambreDao.charcherChambre(id);
 		return new ResponseEntity<>(ch,HttpStatus.OK);
 	}
+	@GetMapping("/getchamberbyhotel")
+	public ResponseEntity<List<Chambre>> getChamberByHotel(@RequestParam Long id){
+		List<Chambre> ch = ichambreDao.getChamberbyHotel(id);
+		return new ResponseEntity<>(ch,HttpStatus.OK);
+	}
+	
 }

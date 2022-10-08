@@ -35,7 +35,9 @@ public class Hotel  {
 	
 	private String nom;
 	private String description;
-	@OneToOne(cascade = CascadeType.PERSIST)
+	private String pic;
+	@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST) // When we save the hotel entity, the address entity will also get saved.
+	
 	@JoinColumn(name = "id_adresse")
 	private Adresse adresse;
 	
@@ -51,13 +53,14 @@ public class Hotel  {
 	private List<Chambre> chambres;
 
 	public Hotel(String nom, String description, Adresse adresse, List<Equipement> equipements,
-			List<Chambre> chambres) {
+			List<Chambre> chambres, String pic) {
 		super();
 		this.nom = nom;
 		this.description = description;
 		this.adresse = adresse;
 		this.equipements = equipements;
 		this.chambres = chambres;
+		this.pic=pic;
 	}
 	public void addChambers(Chambre c) {
 		if(getChambres() == null)

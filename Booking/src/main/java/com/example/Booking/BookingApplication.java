@@ -2,13 +2,22 @@ package com.example.Booking;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Collectors;
 
+import org.hibernate.internal.build.AllowSysOut;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import com.example.Booking.Controller.ChamberController;
 import com.example.Booking.Dao.IadresseDao;
@@ -16,15 +25,50 @@ import com.example.Booking.Dao.IchambreDao;
 import com.example.Booking.Dao.IequipementDao;
 import com.example.Booking.Dao.IhotelDao;
 import com.example.Booking.Dao.IreservationDao;
+import com.example.Booking.Dao.IvisiteurDao;
 import com.example.Booking.Entities.Adresse;
 import com.example.Booking.Entities.Chambre;
 import com.example.Booking.Entities.Equipement;
 import com.example.Booking.Entities.Hotel;
 import com.example.Booking.Entities.Reservation;
 import com.example.Booking.Entities.Visiteur;
+import com.example.Booking.Repository.AdresseRepository;
 
+import lombok.AllArgsConstructor;
+@AllArgsConstructor
 @SpringBootApplication
 public class BookingApplication implements CommandLineRunner {
+
+	@Bean
+	public CorsFilter corsFilter() {
+		CorsConfiguration corsConfiguration = new CorsConfiguration();
+		corsConfiguration.setAllowCredentials(true);
+		corsConfiguration.setAllowedOrigins(Arrays.asList("http://localhost:4200"));
+		corsConfiguration.setAllowedHeaders(Arrays.asList("Origin", "Access-Control-Allow-Origin", "Content-Type",
+				"Accept", "Authorization", "Origin, Accept", "X-Requested-With",
+				"Access-Control-Request-Method", "Access-Control-Request-Headers"));
+		corsConfiguration.setExposedHeaders(Arrays.asList("Origin", "Content-Type", "Accept", "Authorization",
+				"Access-Control-Allow-Origin", "Access-Control-Allow-Origin", "Access-Control-Allow-Credentials"));
+		corsConfiguration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+		UrlBasedCorsConfigurationSource urlBasedCorsConfigurationSource = new UrlBasedCorsConfigurationSource();
+		urlBasedCorsConfigurationSource.registerCorsConfiguration("/**", corsConfiguration);
+		return new CorsFilter(urlBasedCorsConfigurationSource);
+	}
+	@Bean
+	public WebMvcConfigurer corsMappingConfigurer() {
+	   return new WebMvcConfigurer() {
+	       @Override
+	       public void addCorsMappings(CorsRegistry registry) {
+	          
+	           registry.addMapping("/**")
+	             .allowedOrigins("http://localhost:4200")
+	             .allowedMethods("GET", "POST", "PATCH", "PUT", "DELETE","OPTIONS", "HEAD")
+	             .maxAge(3600)
+	             .allowedHeaders("Requestor-Type")
+	             .exposedHeaders("X-Get-Header");
+	       }
+	   };
+	}
 
 	public static void main(String[] args) {
 		SpringApplication.run(BookingApplication.class, args);
@@ -41,57 +85,20 @@ public class BookingApplication implements CommandLineRunner {
 	private IequipementDao  iquipIequipementDao;
 	@Autowired
 	private IadresseDao iadresseDao;
+	@Autowired
+	private IvisiteurDao ivisiteurDao; 
+	
+	private AdresseRepository adrrepo;
+	
 	@Override
 	public void run(String... args) throws Exception {
-		
-		Adresse a = new Adresse("rabat-sale", "rabat", "Agdal",null );
-		Hotel h = new Hotel("Othmane-Zineb", "Hotel spa ressot", a, null, null);
-		//iadresseDao.AjouterAdresse(a);
-		h.setAdresse(a);
-		//Hotel h1 = ihotelDao.ajouterHotel(h);
-		
-		Visiteur v1 = new Visiteur("Othmane", "Oumoudid", "0706806418",null);
-		Equipement e1 = new Equipement("piscin1", "adults", null);
-		Equipement e2 = new Equipement("piscin2", "enfants", null);
-		Chambre c1 = new Chambre(2, 4, 250.0F, "double", 205, null, null);
-		Chambre c2 = new Chambre(2, 4, 250.0F, "Enfants", 206, null, null);
-		
-		
-		List<Chambre> chambres  = new ArrayList<Chambre>();
-		chambres.add(c1);
-		chambres.add(c2);
-		
-		//ichambreDao.ajouterChambre(c1);
-		//ichambreDao.ajouterChambre(c2);
-		Hotel hotel = ihotelDao.AddChamberToHot(h, c1);
-		//Hotel hotel2 = ihotelDao.AddChamberToHot(h, c2);
-		
-		for(Chambre c : hotel.getChambres())
-		{
-			System.out.println(c.getId_chambre());
-		}
-		
-		Reservation r1 = new Reservation(LocalDate.of(2022, 6, 24),LocalDate.of(2022,8 , 28),2 , 2, "rabat", chambres, v1);
-		
-		
-	
-		//ireservationDao.ajouterReservation(r1);
-		ireservationDao.addVisiteur(r1,v1);
-		
-		ireservationDao.addChambersToReservation(chambres, r1.getId_reservation());
-		
-		iquipIequipementDao.ajouterEquip(e1);
-		iquipIequipementDao.ajouterEquip(e2);
-		
-		ihotelDao.affecterEquiptoHotel(e1.getId_equipement(), h.getId_hotel());
-		
-		List<Hotel> hotels = ihotelDao.findHotelByVille("rabat");
-		float tarif = ireservationDao.tarifs(r1.getId_reservation());
-//		System.out.println(hotels);
-		
-		
-		System.out.println("tarifs "+tarif);
-		
+	Hotel h = ihotelDao.chercherHotel(1L);
+	Equipement e = iquipIequipementDao.charcherEquipement(2L);
+	List<Hotel> ho = ihotelDao.findHotelByVille("rabat");
+	ho.stream().map(Hotel::getNom).forEach(System.out::println);
 	}
+	
+	
+	
 
 }

@@ -30,7 +30,7 @@ public class Chambre {
 	private Long id_chambre;
 	private int nbr_lit;
 	private int capacity;
-	private float prix;
+	private int prix;
 	private String typeChamber;
 	private int numChamber;
 
@@ -40,11 +40,11 @@ public class Chambre {
 	private Hotel hotel;
 	
 	@ManyToMany(mappedBy = "chambres")
-	@LazyCollection(LazyCollectionOption.FALSE)
+	@LazyCollection(LazyCollectionOption.FALSE) //we won't load the list of reservations immediately.
 	@JsonProperty(access = Access.WRITE_ONLY)
 	private List<Reservation> reservations;
 
-	public Chambre(int nbr_lit, int capacity, float prix, String typeChamber, int numChamber, Hotel hotel,
+	public Chambre(int nbr_lit, int capacity, int prix, String typeChamber, int numChamber, Hotel hotel,
 			List<Reservation> reservations) {
 		super();
 		this.nbr_lit = nbr_lit;

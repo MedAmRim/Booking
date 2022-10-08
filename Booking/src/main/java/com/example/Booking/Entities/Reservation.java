@@ -40,11 +40,11 @@ public class Reservation implements Serializable{
 	@ManyToMany @JoinTable( name = "reservation_chambers", 
 		     joinColumns = @JoinColumn( name = "id_reservation" ),
 		     inverseJoinColumns = @JoinColumn( name = "id_chambre"))
-			@JsonProperty(access = Access.WRITE_ONLY)
-			@LazyCollection(LazyCollectionOption.FALSE)
+	@JsonProperty(access = Access.WRITE_ONLY)
+	@LazyCollection(LazyCollectionOption.FALSE)
 	private List<Chambre> chambres = new ArrayList<>();
 	
-	@ManyToOne(fetch = FetchType.EAGER , cascade = CascadeType.ALL)
+	@ManyToOne(fetch = FetchType.EAGER , cascade = {CascadeType.REMOVE , CascadeType.MERGE})
 	@JsonProperty(access = Access.WRITE_ONLY)
 	@JoinColumn(name = "id_visiteur")
 	private Visiteur visiteur;

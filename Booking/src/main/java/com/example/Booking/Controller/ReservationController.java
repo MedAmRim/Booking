@@ -5,7 +5,9 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,6 +20,7 @@ import com.example.Booking.Entities.Visiteur;
 
 @RestController
 @RequestMapping("/reservations")
+@CrossOrigin("*")
 public class ReservationController {
 	@Autowired
 	private IreservationDao ireservationDao;
@@ -45,8 +48,8 @@ public class ReservationController {
 		Reservation reservation = ireservationDao.addVisiteur(r, v);
 		return new ResponseEntity<>(reservation,HttpStatus.OK);
 	}
-	@PostMapping("/addchamberstoR")
-	public ResponseEntity<Reservation> addChambersToReservation(@RequestBody List<Chambre> chambres, @RequestParam Long id)
+	@PostMapping("/addchamberstoR/{id}")
+	public ResponseEntity<Reservation> addChambersToReservation(@RequestBody List<Chambre> chambres, @PathVariable Long id)
 	{
 		Reservation r = ireservationDao.addChambersToReservation(chambres, id);
 		return new ResponseEntity<>(r,HttpStatus.OK);

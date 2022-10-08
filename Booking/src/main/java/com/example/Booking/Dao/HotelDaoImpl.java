@@ -35,7 +35,7 @@ public class HotelDaoImpl implements IhotelDao{
 				h.getEquipements().add(e);
 			}
 	  hotelRepository.save(h);
-		
+	  		
 	}
 	@Override
 	public Hotel ajouterHotel(Hotel h) {

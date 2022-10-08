@@ -40,9 +40,5 @@ public class Equipement {
 		this.description_equipemnt = description_equipemnt;
 		this.hotels = hotels;
 	}
-	
-	
-	
-	
 
 }

@@ -19,12 +19,25 @@ public class ReservationDaoImpl implements IreservationDao{
 	private ReservationRepository reservationRepository;
 	@Autowired
 	private IvisiteurDao visiteurRepository;
+
 	@Override
 	public Reservation ajouterReservation(Reservation r) {
 		
 		return reservationRepository.save(r);
 		
 	}
+
+	@Override
+	public Reservation updateReservation(Reservation r){
+		return reservationRepository.updateReservation(
+			r.getDate_depart(),
+		 	r.getDate_arrivee(),
+		  	r.getNbrAdults(),
+		   	r.getNbrEnfants(),
+		    r.getDestination(),
+			r.getId_reservation());
+	}
+
 	@Override
 	public float tarifs(Long id) {
 		Reservation reservation = chercherReservation(id);

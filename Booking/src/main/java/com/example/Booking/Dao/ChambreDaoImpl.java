@@ -36,7 +36,13 @@ public class ChambreDaoImpl implements  IchambreDao{
 	@Override
 	public Chambre modifierChambre(Chambre c) {
 	
-		return chambreRepository.save(c);
+		return chambreRepository.updateChambre(
+			c.getNbr_lit(),
+		 	c.getCapacity(),
+		  	c.getPrix(),
+		   	c.getTypeChamber(),
+		    c.getNumChamber(),
+			c.getId_chambre());
 	}
 	@Override
 	public void supprimerChambre(Long id) {

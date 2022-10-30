@@ -14,4 +14,5 @@ public interface IreservationDao {
 	public Reservation chercherReservation(Long id);
 	public Reservation addVisiteur(Reservation r, Visiteur v);	
 	public Reservation addChambersToReservation(List<Chambre> chambers , Long idr);	
+	public Reservation updateReservation(Reservation r);
 }

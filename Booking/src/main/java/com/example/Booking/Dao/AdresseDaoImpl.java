@@ -23,11 +23,15 @@ public class AdresseDaoImpl implements IadresseDao {
 		return adresseRepository.save(a);
 		
 	}
+	
 	@Override
 	public Adresse ModifierAdresse(Adresse a) {
 		
-		return adresseRepository.save(a);
+		return adresseRepository.updateAdress(a.getRegion(),
+		a.getVille(), a.getCartier(), a.getHotel().getId_hotel(),
+		 a.getId_adresse());
 	}
+
 	@Override
 	public void SupprimerAdresse(Long id) {
 		adresseRepository.deleteById(id);
